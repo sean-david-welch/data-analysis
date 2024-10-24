@@ -1,6 +1,8 @@
 import pandas as pd
+from pathlib import Path
 
-df = pd.read_csv('~/Coding/data-analysis/spreadsheets/farmec-sales.csv')
+file_path = Path('../spreadsheets/farmec-sales.csv')
+df = pd.read_csv(file_path)
 
 top_selling = df.groupby('Stock Code')('Quanitity').sum().sort_values(ascending=format(ascending=False))
 print('Top selling products by quantity')
