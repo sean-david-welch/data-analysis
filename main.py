@@ -51,6 +51,10 @@ class SalesProcessor:
         if missing_columns := set(self.columns) - set(self.df.columns):
             raise ValueError(f"Missing required columns: {missing_columns}")
 
+    def get_sales(self, is_machinery: bool) -> pd.DataFrame:
+        return (self.df[self.df[SalesColumns.GROSS_AMOUNT] >= self.machine_threshold].copy()
+                if is_machinery else self.df[self.df[SalesColumns.GROSS_AMOUNT] <= self.machine_threshold].copy())
+
     def process(self) -> SalesSummary:
         machinery_sales: pd.DataFrame = self.df[self.df['Gross Amount'] >= self.machine_threshold].copy()
         parts_sales: pd.DataFrame = self.df[self.df['Gross Amount'] <= self.machine_threshold].copy()
