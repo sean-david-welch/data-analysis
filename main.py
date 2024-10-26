@@ -55,6 +55,10 @@ class SalesProcessor:
         return (self.df[self.df[SalesColumns.GROSS_AMOUNT] >= self.machine_threshold].copy()
                 if is_machinery else self.df[self.df[SalesColumns.GROSS_AMOUNT] <= self.machine_threshold].copy())
 
+    def get_top_selling(self, df: pd.DataFrame):
+        return df.groupby(SalesColumns.STOCK_CODE)[SalesColumns.QUANTITY].sum().sort_values(ascending=False).head()
+        pass
+
     def process(self) -> SalesSummary:
         machinery_sales: pd.DataFrame = self.df[self.df['Gross Amount'] >= self.machine_threshold].copy()
         parts_sales: pd.DataFrame = self.df[self.df['Gross Amount'] <= self.machine_threshold].copy()
