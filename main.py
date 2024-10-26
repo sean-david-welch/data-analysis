@@ -73,11 +73,8 @@ class SalesProcessor:
         totals: pd.Series = pd.Series({
             SalesColumns.STOCK_CODE: 'TOTAL',
             SalesColumns.DESCRIPTION: '',
+            **{col: df[col].sum() for col in self.numerical_cols}
         })
-
-        for col in self.numerical_cols:
-            totals[col] = df[col].sum()
-
         return pd.concat([df, pd.DataFrame([totals])], ignore_index=True)
 
     def save_to_csv(self, df: pd.DataFrame, filename: str) -> pd.Series:
