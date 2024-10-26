@@ -57,11 +57,10 @@ class SalesProcessor:
 
     def get_top_selling(self, df: pd.DataFrame):
         return df.groupby(SalesColumns.STOCK_CODE)[SalesColumns.QUANTITY].sum().sort_values(ascending=False).head()
-        pass
 
     def process(self) -> SalesSummary:
-        machinery_sales: pd.DataFrame = self.df[self.df['Gross Amount'] >= self.machine_threshold].copy()
-        parts_sales: pd.DataFrame = self.df[self.df['Gross Amount'] <= self.machine_threshold].copy()
+        machinery_sales: pd.DataFrame = self.get_sales(is_machinery=True)
+        parts_sales: pd.DataFrame = self.get_sales(is_machinery=False)
 
         machinery_sales.to_csv(self.output_path / 'machinery_sales.csv', index=False)
         parts_sales.to_csv(self.output_path / 'parts_sales.csv', index=False)
@@ -78,14 +77,20 @@ class SalesProcessor:
         return summary
 
 
-if __name__ == '__main__':
-    processer = SalesProcessor()
-    summary = processer.process()
+def main():
+    processor = SalesProcessor()
+    summary = processor.process()
 
-    print("Total sales records:", summary['total_records'])
-    print("Total machinery sales records:", summary['machine_records'])
-    print("Total parts sales records:", summary['parts_records'])
-    print("Gross machinery sales amount:", summary['gross_machine_sales'])
-    print("Gross parts sales amount:", summary['gross_part_sales'])
-    print("Top selling machinery products by quantity:\n", summary['top_selling_machines'])
-    print("Top selling parts products by quantity:\n", summary['top_selling_parts'])
+    print(f"Total sales records: {summary['total_records']:,}")
+    print(f"Total machinery sales records: {summary['machine_records']:,}")
+    print(f"Total parts sales records: {summary['parts_records']:,}")
+    print(f"Gross machinery sales amount: ${summary['gross_machine_sales']:,.2f}")
+    print(f"Gross parts sales amount: ${summary['gross_part_sales']:,.2f}")
+    print("\nTop selling machinery products by quantity:")
+    print(summary['top_selling_machines'])
+    print("\nTop selling parts products by quantity:")
+    print(summary['top_selling_parts'])
+
+
+if __name__ == '__main__':
+    main()
