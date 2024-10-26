@@ -34,7 +34,7 @@ class SalesSummary(TypedDict):
 
 class SalesProcessor:
     machine_threshold: int = 1000
-    columns: pd.DataFrame = ['Stock Code', 'Description', 'Quanitity', 'Net Amount', 'Tax Amount', 'Gross Amount']
+    columns: list = ['Stock Code', 'Description', 'Quantity', 'Net Amount', 'Tax Amount', 'Gross Amount']
     input_path: Path = Path('./spreadsheets/farmec-sales.csv')
     output_path: Path = Path('./data/')
 
@@ -42,7 +42,7 @@ class SalesProcessor:
         self.df: pd.DataFrame = pd.read_csv(self.input_path, dtype={
             SalesColumns.STOCK_CODE: str,
             SalesColumns.DESCRIPTION: str,
-            SalesColumns.QUANTITY: int,
+            SalesColumns.QUANTITY: 'float64',
             SalesColumns.NET_AMOUNT: float,
             SalesColumns.TAX_AMOUNT: float,
             SalesColumns.GROSS_AMOUNT: float,
@@ -53,7 +53,7 @@ class SalesProcessor:
 
     def get_sales(self, is_machinery: bool) -> pd.DataFrame:
         return (self.df[self.df[SalesColumns.GROSS_AMOUNT] >= self.machine_threshold].copy()
-                if is_machinery else self.df[self.df[SalesColumns.GROSS_AMOUNT] <= self.machine_threshold].copy())
+                if is_machinery else self.df[self.df[SalesColumns.GROSS_AMOUNT] < self.machine_threshold].copy())
 
     def get_top_selling(self, df: pd.DataFrame):
         return df.groupby(SalesColumns.STOCK_CODE)[SalesColumns.QUANTITY].sum().sort_values(ascending=False).head()
@@ -69,10 +69,10 @@ class SalesProcessor:
             total_records=len(self.df),
             machine_records=len(machinery_sales),
             parts_records=len(parts_sales),
-            gross_machine_sales=machinery_sales.groupby('Gross Amount').sum(),
-            gross_part_sales=parts_sales.groupby('Gross Amount').sum(),
-            top_selling_machines=machinery_sales.groupby('Stock Code')['Quanitity'].sum().sort_values(ascending=False).head(),
-            top_selling_parts=parts_sales.groupby('Gross Amount')['Quanitity'].sum().sort_values(ascending=False).head(),
+            gross_machine_sales=machinery_sales['Gross Amount'].sum(),
+            gross_part_sales=parts_sales['Gross Amount'].sum(),
+            top_selling_machines=self.get_top_selling(machinery_sales),
+            top_selling_parts=self.get_top_selling(parts_sales),
         )
         return summary
 
