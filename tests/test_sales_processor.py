@@ -1,14 +1,15 @@
+import os
 import pandas as pd
 
-from pathlib import Path
 from unittest import TestCase
 from pandas.testing import assert_frame_equal
 
-from data_analysis.sales_processor import SalesProcessor, SalesColumns
+from sales_processor import SalesProcessor, SalesColumns
 
 
 class TestSalesProcessor(TestCase):
     def setUp(self):
+        os.makedirs('./data', exist_ok=True)
         self.test_data: pd.DataFrame = pd.DataFrame({
             SalesColumns.STOCK_CODE: ['M001', 'M002', 'P001', 'P002', 'P003'],
             SalesColumns.DESCRIPTION: ['Machine 1', 'Machine 2', 'Part 1', 'Part 2', 'Part 3'],
@@ -18,16 +19,8 @@ class TestSalesProcessor(TestCase):
             SalesColumns.GROSS_AMOUNT: [1200, 2400, 120, 240, 360]
         })
 
-        self.temp_path = Path('../test_data/')
-        self.temp_path.mkdir(exist_ok=True)
-
-        self.input_path = self.tmp_path / 'test-sales.csv'
-        self.output_path = self.tmp_path / 'output'
-        self.test_data.to_csv(self.input_path, index=False)
-
+        self.test_data.to_csv('./data/test_data.csv', index=False)
         self.processor: SalesProcessor = SalesProcessor()
-        self.processor.input_path = self.input_path
-        self.processor.output_path = self.output_path
 
     def test_initialization(self):
         assert_frame_equal(self.processor.df, self.test_data)
@@ -50,7 +43,6 @@ class TestSalesProcessor(TestCase):
 
         self.assertEqual(len(machinery), 2)
         self.assertTrue(all(machinery[SalesColumns.STOCK_CODE].isin(['M001', 'M002'])))
-        # Verify unit prices are correctly calculated
         unit_prices = machinery[SalesColumns.GROSS_AMOUNT] / machinery[SalesColumns.QUANTITY]
         self.assertTrue(all(unit_prices >= self.processor.machine_threshold))
 
@@ -59,7 +51,6 @@ class TestSalesProcessor(TestCase):
 
         self.assertEqual(len(parts), 3)
         self.assertTrue(all(parts[SalesColumns.STOCK_CODE].isin(['P001', 'P002', 'P003'])))
-        # Verify unit prices are correctly calculated
         unit_prices = parts[SalesColumns.GROSS_AMOUNT] / parts[SalesColumns.QUANTITY]
         self.assertTrue(all(unit_prices < self.processor.machine_threshold))
 
