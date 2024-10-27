@@ -2,6 +2,7 @@ import os
 import pandas as pd
 
 from unittest import TestCase
+from pathlib import Path
 from pandas.testing import assert_frame_equal
 
 from sales_processor import SalesProcessor, SalesColumns
@@ -19,8 +20,16 @@ class TestSalesProcessor(TestCase):
             SalesColumns.GROSS_AMOUNT: [1200, 2400, 120, 240, 360]
         })
 
-        self.test_data.to_csv('./data/test_data.csv', index=False)
-        self.processor: SalesProcessor = SalesProcessor()
+        self.tmp_path = Path('./data')
+        self.tmp_path.mkdir(exist_ok=True)
+
+        self.input_path = self.tmp_path / 'test-sales.csv'
+        self.output_path = self.tmp_path
+        self.test_data.to_csv(self.input_path, index=False)
+
+        self.processor = SalesProcessor()
+        self.processor.input_path = self.input_path
+        self.processor.output_path = self.output_path
 
     def test_initialization(self):
         assert_frame_equal(self.processor.df, self.test_data)
