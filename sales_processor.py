@@ -89,7 +89,8 @@ class SalesProcessor:
         return pd.concat([df, pd.DataFrame([totals])], ignore_index=True)
 
     def save_to_csv(self, df: pd.DataFrame, filename: str) -> pd.Series:
-        df_with_totals = self.add_totals(df)
+        df_sorted = df.sort_values(by=SalesColumns.QUANTITY, ascending=False)
+        df_with_totals = self.add_totals(df_sorted)
         df_with_totals.to_csv(self.output_path / filename, index=False, float_format='%.2f')
 
     def process(self) -> SalesSummary:
