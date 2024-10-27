@@ -1,4 +1,4 @@
-from pytest import TestCase
+from unittest import TestCase
 
 import pandas as pd
 from pathlib import Path
