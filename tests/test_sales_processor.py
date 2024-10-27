@@ -1,9 +1,10 @@
-from unittest import TestCase
-
 import pandas as pd
+
 from pathlib import Path
-from sales_processor import SalesProcessor, SalesColumns
+from unittest import TestCase
 from pandas.testing import assert_frame_equal
+
+from data_analysis.sales_processor import SalesProcessor, SalesColumns
 
 
 class TestSalesProcessor(TestCase):
