@@ -13,15 +13,6 @@ class SalesColumns:
     GROSS_AMOUNT: Literal["Gross Amount"] = "Gross Amount"
 
 
-class SalesRecord(TypedDict):
-    stock_code: str
-    description: str
-    quantity: int
-    net_amount: float
-    tax_amount: float
-    gross_amount: float
-
-
 class SalesSummary(TypedDict):
     total_records: int
     machine_records: int
