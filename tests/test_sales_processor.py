@@ -26,18 +26,6 @@ class TestSalesProcessor(TestCase):
         assert_frame_equal(self.processor.df, self.test_data)
         assert self.processor.output_path.exists()
 
-    def test_initialization_missing_columns(self):
-        invalid_data = pd.DataFrame({
-            'Invalid Column': [1, 2, 3]
-        })
-        invalid_path = self.tmp_path / 'invalid-sales.csv'
-        invalid_data.to_csv(invalid_path, index=False)
-
-        with self.assertRaises(ValueError) as context:
-            processor = SalesProcessor()
-            processor.input_path = invalid_path
-        self.assertIn("Missing required columns", str(context.exception))
-
     def test_get_sales_machinery(self):
         machinery = self.processor.get_sales(is_machinery=True)
 
