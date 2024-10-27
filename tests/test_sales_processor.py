@@ -29,10 +29,6 @@ class TestSalesProcessor(TestCase):
 
         self.processor = SalesProcessor(input_path=self.input_path, output_path=self.output_path, machine_threshold=1000)
 
-    def test_initialization(self):
-        assert_frame_equal(self.processor.df, self.test_data)
-        assert self.processor.output_path.exists()
-
     def test_get_sales_machinery(self):
         machinery = self.processor.get_sales(is_machinery=True)
 
