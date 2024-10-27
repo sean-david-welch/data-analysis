@@ -63,8 +63,13 @@ class SalesProcessor:
             raise ValueError(f"Missing required columns: {missing_columns}")
 
     def get_sales(self, is_machinery: bool) -> pd.DataFrame:
-        return (self.df[self.df[SalesColumns.GROSS_AMOUNT] >= self.machine_threshold].copy()
-                if is_machinery else self.df[self.df[SalesColumns.GROSS_AMOUNT] < self.machine_threshold].copy())
+        unit_prices = (
+            self.df[SalesColumns.GROSS_AMOUNT].div(self.df[SalesColumns.QUANTITY])
+            .replace([float('inf'), float('-inf')], float('nan'))
+            .fillna(0)
+        )
+        return (self.df[unit_prices >= self.machine_threshold].copy()
+                if is_machinery else self.df[unit_prices <= self.machine_threshold].copy())
 
     def get_top_selling(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
