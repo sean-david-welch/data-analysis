@@ -113,18 +113,37 @@ class SalesProcessor:
 
 
 def main():
+    from tabulate import tabulate
     processor = SalesProcessor()
     summary = processor.process()
 
-    print(f"Total sales records: {summary['total_records']:,}")
-    print(f"Total machinery sales records: {summary['machine_records']:,}")
-    print(f"Total parts sales records: {summary['parts_records']:,}")
-    print(f"Gross machinery sales amount: €{summary['gross_machine_sales']:,.2f}")
-    print(f"Gross parts sales amount: €{summary['gross_part_sales']:,.2f}")
-    print("\nTop selling machinery products by quantity:")
-    print(summary['top_selling_machines'])
-    print("\nTop selling parts products by quantity:")
-    print(summary['top_selling_parts'])
+    stats_data = [
+        ["Total Records", f"{summary['total_records']:,}"],
+        ["Machinery Records", f"{summary['machine_records']:,}"],
+        ["Parts Records", f"{summary['parts_records']:,}"],
+        ["Machinery Sales", f"€{summary['gross_machine_sales']:,.2f}"],
+        ["Parts Sales", f"€{summary['gross_part_sales']:,.2f}"],
+        ["Total Sales", f"€{(summary['gross_machine_sales'] + summary['gross_part_sales']):,.2f}"]
+    ]
+
+    print("\n=== SALES SUMMARY ===")
+    print(tabulate(stats_data, headers=['Metric', 'Value'], tablefmt='grid'))
+
+    print("\n=== TOP SELLING MACHINERY ===")
+    print(tabulate(
+        summary['top_selling_machines'],
+        headers=['Stock Code', 'Description', 'Quantity'],
+        tablefmt='grid',
+        floatfmt='.0f'
+    ))
+
+    print("\n=== TOP SELLING PARTS ===")
+    print(tabulate(
+        summary['top_selling_parts'],
+        headers=['Stock Code', 'Description', 'Quantity'],
+        tablefmt='grid',
+        floatfmt='.0f'
+    ))
 
 
 if __name__ == '__main__':
