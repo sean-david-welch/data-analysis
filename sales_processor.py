@@ -1,16 +1,16 @@
 import pandas as pd
 from pathlib import Path
 
-from typing import TypedDict, Literal
+from typing import TypedDict
 
 
 class SalesColumns:
-    STOCK_CODE: Literal["Stock Code"] = "Stock Code"
-    DESCRIPTION: Literal["Description"] = "Description"
-    QUANTITY: Literal["Quantity"] = "Quantity"
-    NET_AMOUNT: Literal["Net Amount"] = "Net Amount"
-    TAX_AMOUNT: Literal["Tax Amount"] = "Tax Amount"
-    GROSS_AMOUNT: Literal["Gross Amount"] = "Gross Amount"
+    STOCK_CODE = "Stock Code"
+    DESCRIPTION = "Description"
+    QUANTITY = "Quantity"
+    NET_AMOUNT = "Net Amount"
+    TAX_AMOUNT = "Tax Amount"
+    GROSS_AMOUNT = "Gross Amount"
 
 
 class SalesSummary(TypedDict):
