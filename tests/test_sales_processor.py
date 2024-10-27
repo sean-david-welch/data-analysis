@@ -27,9 +27,7 @@ class TestSalesProcessor(TestCase):
         self.output_path = self.tmp_path
         self.test_data.to_csv(self.input_path, index=False)
 
-        self.processor = SalesProcessor()
-        self.processor.input_path = self.input_path
-        self.processor.output_path = self.output_path
+        self.processor = SalesProcessor(input_path=self.input_path, output_path=self.output_path, machine_threshold=1000)
 
     def test_initialization(self):
         assert_frame_equal(self.processor.df, self.test_data)
@@ -108,9 +106,7 @@ class TestSalesProcessor(TestCase):
         edge_path = self.tmp_path / 'edge-sales.csv'
         edge_data.to_csv(edge_path, index=False)
 
-        processor = SalesProcessor()
-        processor.input_path = edge_path
-        processor.output_path = self.tmp_path / 'edge-output'
+        processor = SalesProcessor(input_path=edge_path, output_path=self.tmp_path / 'edge-output', machine_threshold=1000)
 
         machinery = processor.get_sales(is_machinery=True)
         self.assertEqual(len(machinery), 1)
