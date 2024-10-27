@@ -33,15 +33,22 @@ class SalesSummary(TypedDict):
 
 
 class SalesProcessor:
-    machine_threshold: int = 1000
-    numerical_cols: list[str] = [SalesColumns.QUANTITY, SalesColumns.NET_AMOUNT, SalesColumns.TAX_AMOUNT, SalesColumns.GROSS_AMOUNT]
-    input_path: Path = Path('./spreadsheets/farmec-sales.csv')
-    output_path: Path = Path('./data/')
+    def __init__(self, input_path: Path = Path('./spreadsheets/farmec-sales.csv'), output_path: Path = Path('./data/'), machine_threshold: int = 1000):
+        self.machine_threshold = machine_threshold
+        self.numerical_cols = [
+            SalesColumns.QUANTITY,
+            SalesColumns.NET_AMOUNT,
+            SalesColumns.TAX_AMOUNT,
+            SalesColumns.GROSS_AMOUNT
+        ]
+        self.input_path = input_path
+        self.output_path = output_path
 
-    def __init__(self):
         self.output_path.mkdir(parents=True, exist_ok=True)
+        self.df: pd.DataFrame = self.load_data()
 
-        self.df: pd.DataFrame = pd.read_csv(self.input_path, dtype={
+    def load_data(self) -> pd.DataFrame:
+        df: pd.DataFrame = pd.read_csv(self.input_path, dtype={
             SalesColumns.STOCK_CODE: str,
             SalesColumns.DESCRIPTION: str,
             SalesColumns.QUANTITY: 'float64',
@@ -61,6 +68,7 @@ class SalesProcessor:
 
         if missing_columns := set(required_columns) - set(self.df.columns):
             raise ValueError(f"Missing required columns: {missing_columns}")
+        return df
 
     def get_sales(self, is_machinery: bool) -> pd.DataFrame:
         unit_prices = (
