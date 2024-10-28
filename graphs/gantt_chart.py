@@ -1,98 +1,153 @@
 import plotly.figure_factory as ff
 import plotly.io as pio
 
-
 pio.renderers.default = "browser"
 
 
 def create_gantt_data():
-    # Format: Task, Start Date, End Date, Duration (days)
+    # Group tasks by phase for better organization
     tasks = [
-        # Phase 1: Project Setup & Requirements
-        ["Project Setup", "2024-10-14", "2024-10-18", 5],
-        ["Requirements Analysis", "2024-10-14", "2024-10-21", 8],
-        # Phase 2: Design & Architecture
-        ["Database Design", "2024-10-21", "2024-10-25", 5],
-        ["UI/UX Design", "2024-10-21", "2024-10-28", 8],
-        ["System Architecture Design", "2024-10-21", "2024-10-28", 8],
-        # Phase 3: Development
-        ["Backend Development - Core", "2024-10-28", "2024-11-11", 15],
-        ["Frontend Development - Basic", "2024-10-28", "2024-11-11", 15],
-        ["AI Integration", "2024-11-11", "2024-11-25", 14],
-        ["HTMX Implementation", "2024-11-11", "2024-11-25", 14],
-        # Phase 4: Testing & Integration
-        ["Unit Testing", "2024-11-25", "2024-12-02", 7],
-        ["Integration Testing", "2024-11-25", "2024-12-02", 7],
-        ["User Testing", "2024-12-02", "2024-12-09", 7],
-        # Phase 5: Deployment & Documentation
-        ["AWS Setup", "2024-12-09", "2024-12-13", 5],
-        ["Deployment", "2024-12-13", "2024-12-16", 4],
-        ["Final Documentation", "2024-12-02", "2024-12-18", 17]
+        # Phase 1
+        {"Task": "Project Setup", "Start": "2024-10-14", "Finish": "2024-10-18", "Phase": "Project Initialization", "Progress": 0},
+        {"Task": "Requirements Analysis", "Start": "2024-10-14", "Finish": "2024-10-21", "Phase": "Project Initialization", "Progress": 0},
+
+        # Phase 2
+        {"Task": "Database Design", "Start": "2024-10-21", "Finish": "2024-10-25", "Phase": "Design", "Progress": 0},
+        {"Task": "UI/UX Design", "Start": "2024-10-21", "Finish": "2024-10-28", "Phase": "Design", "Progress": 0},
+        {"Task": "System Architecture Design", "Start": "2024-10-21", "Finish": "2024-10-28", "Phase": "Design", "Progress": 0},
+
+        # Phase 3
+        {"Task": "Backend Development - Core", "Start": "2024-10-28", "Finish": "2024-11-11", "Phase": "Development", "Progress": 0},
+        {"Task": "Frontend Development - Basic", "Start": "2024-10-28", "Finish": "2024-11-11", "Phase": "Development", "Progress": 0},
+        {"Task": "AI Integration", "Start": "2024-11-11", "Finish": "2024-11-25", "Phase": "Development", "Progress": 0},
+        {"Task": "HTMX Implementation", "Start": "2024-11-11", "Finish": "2024-11-25", "Phase": "Development", "Progress": 0},
+
+        # Phase 4
+        {"Task": "Unit Testing", "Start": "2024-11-25", "Finish": "2024-12-02", "Phase": "Testing", "Progress": 0},
+        {"Task": "Integration Testing", "Start": "2024-11-25", "Finish": "2024-12-02", "Phase": "Testing", "Progress": 0},
+        {"Task": "User Testing", "Start": "2024-12-02", "Finish": "2024-12-09", "Phase": "Testing", "Progress": 0},
+
+        # Phase 5
+        {"Task": "AWS Setup", "Start": "2024-12-09", "Finish": "2024-12-13", "Phase": "Deployment", "Progress": 0},
+        {"Task": "Deployment", "Start": "2024-12-13", "Finish": "2024-12-16", "Phase": "Deployment", "Progress": 0},
+        {"Task": "Final Documentation", "Start": "2024-12-02", "Finish": "2024-12-18", "Phase": "Deployment", "Progress": 0}
     ]
+    return tasks
 
-    return [dict(Task=task[0], Start=task[1], Finish=task[2], Duration=task[3]) for task in tasks]
 
-
-def create_gantt_chart(df):
-    colors = {
-        'Project Setup': 'rgb(46, 137, 205)',
-        'Requirements Analysis': 'rgb(46, 137, 205)',
-        'Database Design': 'rgb(114, 44, 121)',
-        'UI/UX Design': 'rgb(114, 44, 121)',
-        'System Architecture Design': 'rgb(114, 44, 121)',
-        'Backend Development - Core': 'rgb(198, 47, 105)',
-        'Frontend Development - Basic': 'rgb(198, 47, 105)',
-        'AI Integration': 'rgb(198, 47, 105)',
-        'HTMX Implementation': 'rgb(198, 47, 105)',
-        'Unit Testing': 'rgb(58, 149, 136)',
-        'Integration Testing': 'rgb(58, 149, 136)',
-        'User Testing': 'rgb(58, 149, 136)',
-        'AWS Setup': 'rgb(107, 127, 135)',
-        'Deployment': 'rgb(107, 127, 135)',
-        'Final Documentation': 'rgb(107, 127, 135)'
+def create_modern_color_palette():
+    return {
+        "Project Initialization": "#3498db",  # Blue
+        "Design": "#9b59b6",                  # Purple
+        "Development": "#e74c3c",             # Red
+        "Testing": "#2ecc71",                 # Green
+        "Deployment": "#34495e"               # Dark Blue
     }
 
+
+def create_gantt_chart(tasks):
+    colors = create_modern_color_palette()
+
+    # Create figure
     fig = ff.create_gantt(
-        df, colors=colors, index_col='Task', show_colorbar=True,
-        group_tasks=True, showgrid_x=True, showgrid_y=True, bar_width=0.3
+        tasks,
+        colors=colors,
+        index_col='Phase',
+        show_colorbar=True,
+        group_tasks=True,
+        showgrid_x=True,
+        showgrid_y=True,
+        bar_width=0.35,
+        height=800
     )
 
     fig.update_layout(
+        plot_bgcolor='white',
+        paper_bgcolor='white',
         title=dict(
             text='Personal Budgeting Tool Development Timeline',
-            font=dict(size=24),
+            font=dict(size=24, family="Arial", color="#2c3e50"),
             x=0.5,
             y=0.95
         ),
-        xaxis_title=dict(
-            text='Date',
-            font=dict(size=16)
+        xaxis=dict(
+            title="Timeline",
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='rgba(211, 211, 211, 0.5)',
+            zeroline=False,
+            showline=True,
+            linewidth=2,
+            linecolor='rgba(0,0,0,0.3)'
         ),
-        height=800,
-        font=dict(size=14),
+        yaxis=dict(
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='rgba(211, 211, 211, 0.5)',
+            zeroline=False,
+            showline=True,
+            linewidth=2,
+            linecolor='rgba(0,0,0,0.3)'
+        ),
+        font=dict(
+            family="Arial",
+            size=14,
+            color="#2c3e50"
+        ),
         showlegend=True,
         legend=dict(
-            font=dict(size=14),
+            title=dict(text="Project Phases"),
+            bgcolor='rgba(255,255,255,0.9)',
+            bordercolor='rgba(0,0,0,0.2)',
+            borderwidth=1,
+            font=dict(size=12),
             yanchor="top",
             y=0.99,
             xanchor="left",
             x=1.05
         ),
-        margin=dict(l=250, r=250, t=100, b=100)
+        margin=dict(l=250, r=250, t=100, b=100),
+        hoverlabel=dict(
+            bgcolor="white",
+            font_size=14,
+            font_family="Arial"
+        )
     )
 
-    fig.update_xaxes(tickfont=dict(size=14), tickangle=45)
-    fig.update_yaxes(tickfont=dict(size=14))
+    # Update axes
+    fig.update_xaxes(
+        tickfont=dict(size=12),
+        tickangle=45,
+        tickformat="%Y-%m-%d",
+        tickmode="auto",
+        nticks=20,
+        showline=True,
+        linewidth=2,
+        linecolor='rgba(0,0,0,0.3)'
+    )
 
-    [trace.update(textfont=dict(size=14, color='black'), textposition='middle center') for trace in fig.data]
+    fig.update_yaxes(
+        tickfont=dict(size=12),
+        showline=True,
+        linewidth=2,
+        linecolor='rgba(0,0,0,0.3)'
+    )
+
+    # Add hover template
+    for trace in fig.data:
+        trace.update(
+            textfont=dict(size=12, color='white'),
+            textposition='middle center',
+            hovertemplate="<b>%{text}</b><br>" + "Start: %{x[0]|%Y-%m-%d}<br>" + "End: %{x[1]|%Y-%m-%d}<br>" + "<extra></extra>"
+        )
+
     return fig
 
 
 def main():
-    df = create_gantt_data()
-    fig = create_gantt_chart(df)
-
-    fig.write_html("project_gantt.html")
+    tasks = create_gantt_data()
+    fig = create_gantt_chart(tasks)
+    fig.write_html("./graphs/project_gantt.html", include_plotlyjs=True, full_html=True)
     fig.show()
 
 
