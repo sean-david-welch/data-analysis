@@ -3,9 +3,8 @@ import pandas as pd
 
 from unittest import TestCase
 from pathlib import Path
-from pandas.testing import assert_frame_equal
 
-from sales_processor import SalesProcessor, SalesColumns
+from farmec.sales_processor import SalesProcessor, SalesColumns
 
 
 class TestSalesProcessor(TestCase):
