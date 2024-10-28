@@ -97,40 +97,11 @@ def create_user_management_usecase():
     return dot
 
 
-def create_transaction_management_usecase():
-    dot = Digraph(comment='Transaction Management')
-    dot.attr(rankdir='LR')
-    dot.attr(fontname='Arial')
-
-    with dot.subgraph(name='cluster_0') as c:
-        c.attr(label='Transaction Management')
-        c.attr(style='rounded')
-
-        c.node('UC1', 'Export\nFinancial Data', shape='ellipse')
-        c.node('UC2', 'View Transaction\nHistory', shape='ellipse')
-        c.node('UC3', 'Filter\nTransactions', shape='ellipse')
-        c.node('UC4', 'Search\nTransactions', shape='ellipse')
-        c.node('UC5', 'Add Recurring\nExpense', shape='ellipse')
-        c.node('UC6', 'Manage Recurring\nExpenses', shape='ellipse')
-
-        c.edge('UC2', 'UC3', 'includes', style='dashed')
-        c.edge('UC2', 'UC4', 'includes', style='dashed')
-        c.edge('UC5', 'UC6', 'extends', style='dashed')
-
-    dot.node('User', 'User', shape='box', style='rounded')
-
-    for uc in ['UC1', 'UC2', 'UC5', 'UC6']:
-        dot.edge('User', uc)
-
-    return dot
-
-
 if __name__ == "__main__":
     diagrams = {
         'core_budget': create_core_budget_usecase(),
         'ai_features': create_ai_features_usecase(),
         'user_management': create_user_management_usecase(),
-        'transaction_management': create_transaction_management_usecase()
     }
 
     for name, diagram in diagrams.items():
