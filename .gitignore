@@ -4,3 +4,4 @@ data
 */__pycache__
 .pytest_cache
 __pycache__
+project_gantt.html
