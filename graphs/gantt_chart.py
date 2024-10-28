@@ -5,7 +5,6 @@ pio.renderers.default = "browser"
 
 
 def create_gantt_data():
-    # Group tasks by phase for better organization
     tasks = [
         # Phase 1
         {"Task": "Project Setup", "Start": "2024-10-14", "Finish": "2024-10-18", "Phase": "Project Initialization", "Progress": 0},
@@ -35,20 +34,19 @@ def create_gantt_data():
     return tasks
 
 
-def create_modern_color_palette():
+def create_colours():
     return {
-        "Project Initialization": "#3498db",  # Blue
-        "Design": "#9b59b6",                  # Purple
-        "Development": "#e74c3c",             # Red
-        "Testing": "#2ecc71",                 # Green
-        "Deployment": "#34495e"               # Dark Blue
+        "Project Initialization": "#3498db",
+        "Design": "#9b59b6",
+        "Development": "#e74c3c",
+        "Testing": "#2ecc71",
+        "Deployment": "#34495e"
     }
 
 
 def create_gantt_chart(tasks):
-    colors = create_modern_color_palette()
+    colors = create_colours()
 
-    # Create figure
     fig = ff.create_gantt(
         tasks,
         colors=colors,
@@ -65,7 +63,7 @@ def create_gantt_chart(tasks):
         plot_bgcolor='white',
         paper_bgcolor='white',
         title=dict(
-            text='Personal Budgeting Tool Development Timeline',
+            text='BudgetAI Development Timeline',
             font=dict(size=24, family="Arial", color="#2c3e50"),
             x=0.5,
             y=0.95
@@ -114,7 +112,6 @@ def create_gantt_chart(tasks):
         )
     )
 
-    # Update axes
     fig.update_xaxes(
         tickfont=dict(size=12),
         tickangle=45,
@@ -132,14 +129,6 @@ def create_gantt_chart(tasks):
         linewidth=2,
         linecolor='rgba(0,0,0,0.3)'
     )
-
-    # Add hover template
-    for trace in fig.data:
-        trace.update(
-            textfont=dict(size=12, color='white'),
-            textposition='middle center',
-            hovertemplate="<b>%{text}</b><br>" + "Start: %{x[0]|%Y-%m-%d}<br>" + "End: %{x[1]|%Y-%m-%d}<br>" + "<extra></extra>"
-        )
 
     return fig
 
