@@ -1,98 +1,137 @@
 from graphviz import Digraph
 
 
-def create_budget_tool_usecase():
-    """
-    Creates a comprehensive use case diagram for an AI-driven Personal Budgeting Tool
-    using graphviz. The diagram includes core budgeting features, AI capabilities,
-    and user management functionality.
-
-    Returns:
-        Digraph: A graphviz diagram object
-    """
-    # Initialize diagram with custom settings
-    dot = Digraph(comment='AI Budget Tool Use Case Diagram')
+def create_core_budget_usecase():
+    dot = Digraph(comment='Core Budget Management')
     dot.attr(rankdir='LR')
     dot.attr(fontname='Arial')
 
-    # Define system boundary
     with dot.subgraph(name='cluster_0') as c:
-        c.attr(label='AI Personal Budget Tool System')
+        c.attr(label='Core Budget Management')
         c.attr(style='rounded')
 
-        # Core Budget Management Use Cases
-        c.node('UC1', 'Create/Modify Budget\nLimits', shape='ellipse')
-        c.node('UC2', 'Track Expenses', shape='ellipse')
-        c.node('UC3', 'Categorize\nTransactions', shape='ellipse')
-        c.node('UC4', 'View Spending\nAnalytics', shape='ellipse')
+        c.node('UC1', 'Create New Budget', shape='ellipse')
+        c.node('UC2', 'Modify Budget\nLimits', shape='ellipse')
+        c.node('UC3', 'Add Expense\nEntry', shape='ellipse')
+        c.node('UC4', 'Categorize\nExpense', shape='ellipse')
+        c.node('UC5', 'View Spending\nAnalytics', shape='ellipse')
+        c.node('UC6', 'Generate\nReports', shape='ellipse')
+        c.node('UC7', 'Set Budget\nAlerts', shape='ellipse')
 
-        # AI-Driven Features
-        c.node('UC5', 'Generate AI\nInsights', shape='ellipse')
-        c.node('UC6', 'Get Budget\nRecommendations', shape='ellipse')
-        c.node('UC7', 'View Spending\nPredictions', shape='ellipse')
-        c.node('UC8', 'Receive Financial\nAdvice', shape='ellipse')
+        c.edge('UC3', 'UC4', 'includes', style='dashed')
+        c.edge('UC3', 'UC5', 'includes', style='dashed')
+        c.edge('UC5', 'UC6', 'extends', style='dashed')
 
-        # Account & Data Management
-        c.node('UC9', 'Manage Profile', shape='ellipse')
-        c.node('UC10', 'Authenticate', shape='ellipse')
-        c.node('UC11', 'Export Financial\nData', shape='ellipse')
-        c.node('UC12', 'Set Notification\nPreferences', shape='ellipse')
+    dot.node('User', 'User', shape='box', style='rounded')
+    dot.node('AI', 'AI System', shape='component')
 
-        # Security Features
-        c.node('UC13', 'Manage Data\nPrivacy Settings', shape='ellipse')
-
-        # Include relationships (core functionality)
-        c.edge('UC2', 'UC3', 'includes', style='dashed')
-        c.edge('UC2', 'UC4', 'includes', style='dashed')
-
-        # Include relationships (AI features)
-        c.edge('UC4', 'UC5', 'includes', style='dashed')
-        c.edge('UC5', 'UC6', 'includes', style='dashed')
-        c.edge('UC5', 'UC7', 'includes', style='dashed')
-        c.edge('UC5', 'UC8', 'includes', style='dashed')
-
-        # Extend relationships
-        c.edge('UC13', 'UC9', 'extends', style='dashed')
-        c.edge('UC11', 'UC4', 'extends', style='dashed')
-
-    # Define actors with custom shapes
-    dot.node('User', 'Regular User', shape='box', style='rounded')
-    dot.node('Admin', 'Administrator', shape='box', style='rounded')
-    dot.node('AI', 'ChatGPT API', shape='component')
-    dot.node('NotifSystem', 'Notification\nSystem', shape='component')
-
-    # User relationships
-    user_cases = ['UC1', 'UC2', 'UC4', 'UC8', 'UC9', 'UC10', 'UC11', 'UC12', 'UC13']
-    for uc in user_cases:
+    for uc in ['UC1', 'UC2', 'UC3', 'UC5', 'UC6', 'UC7']:
         dot.edge('User', uc)
 
-    # Admin relationships
-    admin_cases = ['UC9', 'UC10', 'UC13']
-    for uc in admin_cases:
-        dot.edge('Admin', uc)
-
-    # AI system relationships
-    ai_cases = ['UC5', 'UC6', 'UC7', 'UC8']
-    for uc in ai_cases:
-        dot.edge('AI', uc)
-
-    # Notification system relationships
-    dot.edge('NotifSystem', 'UC12')
+    dot.edge('AI', 'UC5')
+    dot.edge('AI', 'UC6')
 
     return dot
 
 
-def generate_diagrams():
-    """
-    Generates and saves the use case diagram in multiple formats
-    """
-    diagram = create_budget_tool_usecase()
+def create_ai_features_usecase():
+    dot = Digraph(comment='AI Features')
+    dot.attr(rankdir='LR')
+    dot.attr(fontname='Arial')
 
-    formats = ['png', 'svg', 'pdf']
-    for fmt in formats:
-        output_path = './graphs/output/budget_tool_usecase'
-        diagram.render(output_path, format=fmt, cleanup=True)
+    with dot.subgraph(name='cluster_0') as c:
+        c.attr(label='AI-Driven Features')
+        c.attr(style='rounded')
+
+        c.node('UC1', 'Get Personalized\nInsights', shape='ellipse')
+        c.node('UC2', 'Receive Budget\nRecommendations', shape='ellipse')
+        c.node('UC3', 'View Spending\nPredictions', shape='ellipse')
+        c.node('UC4', 'Get Financial\nAdvice', shape='ellipse')
+        c.node('UC5', 'Get Category\nRecommendations', shape='ellipse')
+        c.node('UC6', 'Access AI\nGuidance', shape='ellipse')
+
+        c.edge('UC1', 'UC2', 'includes', style='dashed')
+        c.edge('UC1', 'UC3', 'includes', style='dashed')
+        c.edge('UC4', 'UC6', 'includes', style='dashed')
+
+    dot.node('User', 'User', shape='box', style='rounded')
+    dot.node('ChatGPT', 'ChatGPT API', shape='component')
+
+    for uc in ['UC1', 'UC4', 'UC6']:
+        dot.edge('User', uc)
+
+    for uc in ['UC1', 'UC2', 'UC3', 'UC4', 'UC5', 'UC6']:
+        dot.edge('ChatGPT', uc)
+
+    return dot
+
+
+def create_user_management_usecase():
+    dot = Digraph(comment='User Management')
+    dot.attr(rankdir='LR')
+    dot.attr(fontname='Arial')
+
+    with dot.subgraph(name='cluster_0') as c:
+        c.attr(label='User Management')
+        c.attr(style='rounded')
+
+        c.node('UC1', 'Register\nAccount', shape='ellipse')
+        c.node('UC2', 'Login/\nAuthenticate', shape='ellipse')
+        c.node('UC3', 'Manage\nProfile', shape='ellipse')
+        c.node('UC4', 'Reset\nPassword', shape='ellipse')
+        c.node('UC5', 'Configure\nNotifications', shape='ellipse')
+        c.node('UC6', 'Manage Privacy\nSettings', shape='ellipse')
+
+        c.edge('UC1', 'UC2', 'includes', style='dashed')
+        c.edge('UC3', 'UC6', 'extends', style='dashed')
+
+    dot.node('User', 'User', shape='box', style='rounded')
+    dot.node('Admin', 'Administrator', shape='box', style='rounded')
+
+    for uc in ['UC1', 'UC2', 'UC3', 'UC4', 'UC5', 'UC6']:
+        dot.edge('User', uc)
+
+    for uc in ['UC2', 'UC6']:
+        dot.edge('Admin', uc)
+
+    return dot
+
+
+def create_transaction_management_usecase():
+    dot = Digraph(comment='Transaction Management')
+    dot.attr(rankdir='LR')
+    dot.attr(fontname='Arial')
+
+    with dot.subgraph(name='cluster_0') as c:
+        c.attr(label='Transaction Management')
+        c.attr(style='rounded')
+
+        c.node('UC1', 'Export\nFinancial Data', shape='ellipse')
+        c.node('UC2', 'View Transaction\nHistory', shape='ellipse')
+        c.node('UC3', 'Filter\nTransactions', shape='ellipse')
+        c.node('UC4', 'Search\nTransactions', shape='ellipse')
+        c.node('UC5', 'Add Recurring\nExpense', shape='ellipse')
+        c.node('UC6', 'Manage Recurring\nExpenses', shape='ellipse')
+
+        c.edge('UC2', 'UC3', 'includes', style='dashed')
+        c.edge('UC2', 'UC4', 'includes', style='dashed')
+        c.edge('UC5', 'UC6', 'extends', style='dashed')
+
+    dot.node('User', 'User', shape='box', style='rounded')
+
+    for uc in ['UC1', 'UC2', 'UC5', 'UC6']:
+        dot.edge('User', uc)
+
+    return dot
 
 
 if __name__ == "__main__":
-    generate_diagrams()
+    diagrams = {
+        'core_budget': create_core_budget_usecase(),
+        'ai_features': create_ai_features_usecase(),
+        'user_management': create_user_management_usecase(),
+        'transaction_management': create_transaction_management_usecase()
+    }
+
+    for name, diagram in diagrams.items():
+        diagram.render(f'./graphs/output/{name}_usecase', format='png', cleanup=True)
