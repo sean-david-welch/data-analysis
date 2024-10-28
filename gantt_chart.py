@@ -84,17 +84,17 @@ def create_gantt_chart(df):
     fig.update_xaxes(tickfont=dict(size=14), tickangle=45)
     fig.update_yaxes(tickfont=dict(size=14))
 
-    for trace in fig.data:
-        trace.update(
-            textfont=dict(size=14, color='black'),
-            textposition='middle center'
-        )
+    [trace.update(textfont=dict(size=14, color='black'), textposition='middle center') for trace in fig.data]
     return fig
 
 
-df = create_gantt_data()
-fig = create_gantt_chart(df)
+def main():
+    df = create_gantt_data()
+    fig = create_gantt_chart(df)
 
-fig.write_html("project_gantt.html")
+    fig.write_html("project_gantt.html")
+    fig.show()
 
-fig.show()
+
+if __name__ == '__main__':
+    main()
