@@ -1,6 +1,7 @@
 import plotly.figure_factory as ff
 import plotly.io as pio
-# Configure plotly to use a different renderer
+
+
 pio.renderers.default = "browser"
 
 
@@ -29,13 +30,7 @@ def create_gantt_data():
         ["Final Documentation", "2024-12-02", "2024-12-18", 17]
     ]
 
-    df = []
-    for task in tasks:
-        df.append(dict(Task=task[0],
-                       Start=task[1],
-                       Finish=task[2],
-                       Duration=task[3]))
-    return df
+    return [dict(Task=task[0], Start=task[1], Finish=task[2], Duration=task[3]) for task in tasks]
 
 
 def create_gantt_chart(df):
@@ -57,16 +52,11 @@ def create_gantt_chart(df):
         'Final Documentation': 'rgb(107, 127, 135)'
     }
 
-    fig = ff.create_gantt(df,
-                          colors=colors,
-                          index_col='Task',
-                          show_colorbar=True,
-                          group_tasks=True,
-                          showgrid_x=True,
-                          showgrid_y=True,
-                          bar_width=0.3)
+    fig = ff.create_gantt(
+        df, colors=colors, index_col='Task', show_colorbar=True,
+        group_tasks=True, showgrid_x=True, showgrid_y=True, bar_width=0.3
+    )
 
-    # Update layout with improved readability
     fig.update_layout(
         title=dict(
             text='Personal Budgeting Tool Development Timeline',
@@ -91,39 +81,20 @@ def create_gantt_chart(df):
         margin=dict(l=250, r=250, t=100, b=100)
     )
 
-    # Update axes for better readability
-    fig.update_xaxes(
-        tickfont=dict(size=14),
-        tickangle=45
-    )
+    fig.update_xaxes(tickfont=dict(size=14), tickangle=45)
+    fig.update_yaxes(tickfont=dict(size=14))
 
-    fig.update_yaxes(
-        tickfont=dict(size=14)
-    )
-
-    # Update text style for all traces
     for trace in fig.data:
         trace.update(
             textfont=dict(size=14, color='black'),
             textposition='middle center'
         )
-
     return fig
 
 
-# Generate the data and create the chart
 df = create_gantt_data()
 fig = create_gantt_chart(df)
 
-# Save as HTML
 fig.write_html("project_gantt.html")
 
-# This will open the plot in your default browser
 fig.show()
-
-print("The Gantt chart has been saved as 'project_gantt.html' and opened in your browser.")
-print("You can use your browser's print functionality (CMD/CTRL + P) to save it as a PDF.")
-print("Tips for saving as PDF from browser:")
-print("1. Set the orientation to Landscape")
-print("2. Enable 'Background graphics' in print settings")
-print("3. Choose 'Save as PDF' as the destination")
