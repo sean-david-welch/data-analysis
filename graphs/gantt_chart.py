@@ -136,7 +136,7 @@ def create_gantt_chart(tasks):
 def main():
     tasks = create_gantt_data()
     fig = create_gantt_chart(tasks)
-    fig.write_html("./graphs/project_gantt.html", include_plotlyjs=True, full_html=True)
+    fig.write_html("./graphs/output/project_gantt.html", include_plotlyjs=True, full_html=True)
     fig.show()
 
 
