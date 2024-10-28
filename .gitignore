@@ -1,7 +1,11 @@
-.venv
-spreadsheets
-data
+# Config files
+__pycache__
 */__pycache__
 .pytest_cache
-__pycache__
+
+# Directories
+spreadsheets
+data
+
+# Files
 project_gantt.html
