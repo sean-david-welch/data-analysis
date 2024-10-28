@@ -2,6 +2,15 @@ from graphviz import Digraph
 
 
 def create_budget_tool_usecase():
+    """
+    Creates a comprehensive use case diagram for an AI-driven Personal Budgeting Tool
+    using graphviz. The diagram includes core budgeting features, AI capabilities,
+    and user management functionality.
+
+    Returns:
+        Digraph: A graphviz diagram object
+    """
+    # Initialize diagram with custom settings
     dot = Digraph(comment='AI Budget Tool Use Case Diagram')
     dot.attr(rankdir='LR')
     dot.attr(fontname='Arial')
@@ -18,49 +27,72 @@ def create_budget_tool_usecase():
         c.node('UC4', 'View Spending\nAnalytics', shape='ellipse')
 
         # AI-Driven Features
-        c.node('UC5', 'Receive AI-Driven\nInsights', shape='ellipse')
-        c.node('UC6', 'Get Personalized\nBudget Recommendations', shape='ellipse')
+        c.node('UC5', 'Generate AI\nInsights', shape='ellipse')
+        c.node('UC6', 'Get Budget\nRecommendations', shape='ellipse')
         c.node('UC7', 'View Spending\nPredictions', shape='ellipse')
-        c.node('UC8', 'Get Real-time\nFinancial Advice', shape='ellipse')
+        c.node('UC8', 'Receive Financial\nAdvice', shape='ellipse')
 
-        # Account Management
-        c.node('UC9', 'Manage User Profile', shape='ellipse')
-        c.node('UC10', 'Authentication', shape='ellipse')
+        # Account & Data Management
+        c.node('UC9', 'Manage Profile', shape='ellipse')
+        c.node('UC10', 'Authenticate', shape='ellipse')
+        c.node('UC11', 'Export Financial\nData', shape='ellipse')
+        c.node('UC12', 'Set Notification\nPreferences', shape='ellipse')
 
-        # Include relationships
+        # Security Features
+        c.node('UC13', 'Manage Data\nPrivacy Settings', shape='ellipse')
+
+        # Include relationships (core functionality)
         c.edge('UC2', 'UC3', 'includes', style='dashed')
         c.edge('UC2', 'UC4', 'includes', style='dashed')
+
+        # Include relationships (AI features)
         c.edge('UC4', 'UC5', 'includes', style='dashed')
         c.edge('UC5', 'UC6', 'includes', style='dashed')
         c.edge('UC5', 'UC7', 'includes', style='dashed')
+        c.edge('UC5', 'UC8', 'includes', style='dashed')
 
-    # Define actors - using custom shape settings for better actor representation
+        # Extend relationships
+        c.edge('UC13', 'UC9', 'extends', style='dashed')
+        c.edge('UC11', 'UC4', 'extends', style='dashed')
+
+    # Define actors with custom shapes
     dot.node('User', 'Regular User', shape='box', style='rounded')
     dot.node('Admin', 'Administrator', shape='box', style='rounded')
     dot.node('AI', 'ChatGPT API', shape='component')
+    dot.node('NotifSystem', 'Notification\nSystem', shape='component')
 
     # User relationships
-    dot.edge('User', 'UC1')
-    dot.edge('User', 'UC2')
-    dot.edge('User', 'UC4')
-    dot.edge('User', 'UC5')
-    dot.edge('User', 'UC8')
-    dot.edge('User', 'UC9')
-    dot.edge('User', 'UC10')
+    user_cases = ['UC1', 'UC2', 'UC4', 'UC8', 'UC9', 'UC10', 'UC11', 'UC12', 'UC13']
+    for uc in user_cases:
+        dot.edge('User', uc)
 
     # Admin relationships
-    dot.edge('Admin', 'UC10')
-    dot.edge('Admin', 'UC9')
+    admin_cases = ['UC9', 'UC10', 'UC13']
+    for uc in admin_cases:
+        dot.edge('Admin', uc)
 
-    # AI relationships
-    dot.edge('AI', 'UC5')
-    dot.edge('AI', 'UC6')
-    dot.edge('AI', 'UC7')
-    dot.edge('AI', 'UC8')
+    # AI system relationships
+    ai_cases = ['UC5', 'UC6', 'UC7', 'UC8']
+    for uc in ai_cases:
+        dot.edge('AI', uc)
+
+    # Notification system relationships
+    dot.edge('NotifSystem', 'UC12')
 
     return dot
 
 
-# Create and save the diagram
-diagram = create_budget_tool_usecase()
-diagram.render('./graphs/output/budget_tool_usecase', format='png', cleanup=True)
+def generate_diagrams():
+    """
+    Generates and saves the use case diagram in multiple formats
+    """
+    diagram = create_budget_tool_usecase()
+
+    formats = ['png', 'svg', 'pdf']
+    for fmt in formats:
+        output_path = './graphs/output/budget_tool_usecase'
+        diagram.render(output_path, format=fmt, cleanup=True)
+
+
+if __name__ == "__main__":
+    generate_diagrams()
