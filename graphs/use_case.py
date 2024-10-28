@@ -34,9 +34,9 @@ def create_budget_tool_usecase():
         c.edge('UC5', 'UC6', 'includes', style='dashed')
         c.edge('UC5', 'UC7', 'includes', style='dashed')
 
-    # Define actors
-    dot.node('User', 'Regular User', shape='stick_man')
-    dot.node('Admin', 'Administrator', shape='stick_man')
+    # Define actors - using custom shape settings for better actor representation
+    dot.node('User', 'Regular User', shape='box', style='rounded')
+    dot.node('Admin', 'Administrator', shape='box', style='rounded')
     dot.node('AI', 'ChatGPT API', shape='component')
 
     # User relationships
@@ -61,10 +61,6 @@ def create_budget_tool_usecase():
     return dot
 
 
-def main():
-    diagram = create_budget_tool_usecase()
-    diagram.render('budget_tool_usecase', format='png', cleanup=True)
-
-
-if __name__ == '__main__':
-    main()
+# Create and save the diagram
+diagram = create_budget_tool_usecase()
+diagram.render('./graphs/output/budget_tool_usecase', format='png', cleanup=True)
